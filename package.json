@@ -1,0 +1,83 @@
+{
+  "name": "dsh-specflow",
+  "version": "0.1.0",
+  "description": "Specification-driven development workflows for DeepSeek Harness.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "skills",
+    "templates",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "check": "pnpm run typecheck && pnpm run test && pnpm run build && publint && npm pack --dry-run"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "spec-driven-development",
+    "agent",
+    "workflow"
+  ],
+  "homepage": "https://github.com/lonelymoon87/dsh-specflow#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lonelymoon87/dsh-specflow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lonelymoon87/dsh-specflow/issues"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-llm": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-tools": "0.1.0-rc.6",
+    "@deepseek-ai/schemastery": "3.18.1-rc.4"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.0.1 <5",
+    "@deepseek-ai/dsh-agent": ">=0.1.0-rc.6 <0.2.0",
+    "@deepseek-ai/dsh-commands": ">=0.1.0-rc.6 <0.2.0",
+    "@deepseek-ai/dsh-fs": ">=0.1.0-rc.6 <0.2.0",
+    "@deepseek-ai/dsh-goal": ">=0.1.0-rc.6 <0.2.0",
+    "@deepseek-ai/dsh-skill": ">=0.1.0-rc.6 <0.2.0",
+    "@deepseek-ai/dsh-system-prompt": ">=0.1.0-rc.6 <0.2.0"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.1",
+    "@deepseek-ai/dsh-agent": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-commands": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-fs": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-goal": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-skill": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-system-prompt": "0.1.0-rc.6",
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^4.1.8",
+    "publint": "0.3.21",
+    "typescript": "^6.0.0",
+    "vitest": "^4.1.8"
+  },
+  "packageManager": "pnpm@11.7.0"
+}

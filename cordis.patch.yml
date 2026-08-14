@@ -1,0 +1,4 @@
+# Added when a DeepSeek Harness profile installs the dsh-specflow bundle.
+- insert:
+    - id: specflow
+      name: dsh-specflow
