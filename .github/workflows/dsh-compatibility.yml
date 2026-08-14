@@ -1,0 +1,43 @@
+name: DSH compatibility
+
+on:
+  pull_request:
+    paths:
+      - package.json
+      - pnpm-lock.yaml
+      - cordis.patch.yml
+      - .github/workflows/dsh-compatibility.yml
+  schedule:
+    - cron: '23 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  latest-release:
+    name: Latest published DSH
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run check
+      - name: Install the packed bundle into a clean profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_dir=$(mktemp -d)
+          dsh_home=$(mktemp -d)
+          pnpm pack --pack-destination "$release_dir"
+          tarball=$(find "$release_dir" -maxdepth 1 -name '*.tgz' -print -quit)
+          test -n "$tarball"
+          DSH_HOME="$dsh_home" pnpm dlx @deepseek-ai/dsh@latest plugin --profile compatibility add "$tarball"
+          DSH_HOME="$dsh_home" pnpm dlx @deepseek-ai/dsh@latest --profile compatibility --dump-config > "$release_dir/config.yml"
+          grep -F 'name: dsh-specflow' "$release_dir/config.yml"
