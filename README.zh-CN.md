@@ -14,7 +14,7 @@
 
 SpecFlow 把工作状态写进仓库，而不是留在某一次对话里。新会话能够重新读取同一组文件，找到下一项未完成任务，并恢复对应的持久 goal。
 
-v0.1.3 已发布至 npm，并针对 DSH 0.1.0-rc.8 与 0.1.1-rc.1 完成验证，同时保留兼容 rc.6 的 peer 范围。
+v0.1.4 已发布至 npm，并针对 DSH 0.1.0-rc.8 与 0.1.1-rc.1 完成验证，同时保留兼容 rc.6 的 peer 范围。
 
 [English](./README.md)
 
@@ -102,13 +102,13 @@ dsh plugin --profile web add dsh-specflow
 需要固定当前版本，或者不通过 npm 解析时，可以安装预构建的 GitHub Release tarball。
 
 ```sh
-dsh plugin --profile web add https://github.com/lonelymoon87/dsh-specflow/releases/download/v0.1.3/dsh-specflow-0.1.3.tgz
+dsh plugin --profile web add https://github.com/lonelymoon87/dsh-specflow/releases/download/v0.1.4/dsh-specflow-0.1.4.tgz
 ```
 
 Release tarball 不需要构建权限。也可以固定版本从源码安装。
 
 ```sh
-dsh plugin --profile web add github:lonelymoon87/dsh-specflow#v0.1.3
+dsh plugin --profile web add github:lonelymoon87/dsh-specflow#v0.1.4
 ```
 
 源码安装会运行本包的 `prepare` 构建。pnpm 10 及以上版本默认拒绝执行，第一次安装失败时请按 DSH 输出的提示，将准确的包键加入 profile 的构建白名单，然后重新执行同一条命令。需要装进一次性 Agent profile 时，把命令中的 `web` 换成 `headless`。
@@ -146,7 +146,7 @@ dsh plugin --profile web remove dsh-specflow
 
 ## 发布验证
 
-- v0.1.3 tarball 已从 HTTPS Release URL 直接安装进全新的 DSH 0.1.0-rc.8 与 0.1.1-rc.1 profile；
+- v0.1.4 tarball 已从 HTTPS Release URL 直接安装进全新的 DSH 0.1.0-rc.8 与 0.1.1-rc.1 profile；
 - 同一份预构建包已经作为 [`dsh-specflow`](https://www.npmjs.com/package/dsh-specflow) 发布，并通过公开 npm registry 完成安装验证；
 - pack 产物与固定版本 GitHub 源码安装均通过 `dsh --dump-config` 检查；
 - CI 覆盖 Node 22.19 与 Node 24，兼容矩阵会分别使用 DSH 0.1.0-rc.8、npm `latest` 与 `next` 标签重跑真实安装；

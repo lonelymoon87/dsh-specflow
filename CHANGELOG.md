@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.4 - Unreleased
+## 0.1.4 - 2026-08-21
 
 - Add `/specflow` as the single discovery and progress entry point.
 - Register `/constitution` as a first-class UI command.
