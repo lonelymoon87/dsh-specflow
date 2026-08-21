@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title description">
+  <title id="title">SpecFlow for DeepSeek Harness</title>
+  <desc id="description">Durable specifications move through plan, tasks, implementation, and resume stages.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#08111f"/>
+      <stop offset="1" stop-color="#16284a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#55d6be"/>
+      <stop offset="1" stop-color="#72a7ff"/>
+    </linearGradient>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#b8c8e8" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000814" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="320" rx="28" fill="url(#background)"/>
+  <rect width="1200" height="320" rx="28" fill="url(#grid)"/>
+  <circle cx="1115" cy="42" r="160" fill="#447cff" opacity="0.08"/>
+  <circle cx="650" cy="325" r="180" fill="#3de0bb" opacity="0.06"/>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <text x="64" y="112" fill="#f4f8ff" font-size="62" font-weight="750" letter-spacing="-1.5">SpecFlow</text>
+    <rect x="64" y="135" width="118" height="5" rx="2.5" fill="url(#accent)"/>
+    <text x="64" y="180" fill="#c7d4ed" font-size="23">Durable specs. Resumable work.</text>
+    <rect x="64" y="214" width="196" height="38" rx="19" fill="#132d46" stroke="#55d6be" stroke-opacity="0.7"/>
+    <text x="162" y="239" fill="#8fe5d3" font-size="16" font-weight="600" text-anchor="middle">for DeepSeek Harness</text>
+
+    <g filter="url(#shadow)">
+      <rect x="516" y="74" width="132" height="70" rx="16" fill="#14253f" stroke="#49698e"/>
+      <text x="582" y="105" fill="#91a9ca" font-size="13" text-anchor="middle">01</text>
+      <text x="582" y="128" fill="#f1f6ff" font-size="18" font-weight="650" text-anchor="middle">SPEC</text>
+
+      <rect x="676" y="74" width="132" height="70" rx="16" fill="#14253f" stroke="#49698e"/>
+      <text x="742" y="105" fill="#91a9ca" font-size="13" text-anchor="middle">02</text>
+      <text x="742" y="128" fill="#f1f6ff" font-size="18" font-weight="650" text-anchor="middle">PLAN</text>
+
+      <rect x="836" y="74" width="132" height="70" rx="16" fill="#14253f" stroke="#49698e"/>
+      <text x="902" y="105" fill="#91a9ca" font-size="13" text-anchor="middle">03</text>
+      <text x="902" y="128" fill="#f1f6ff" font-size="18" font-weight="650" text-anchor="middle">TASKS</text>
+
+      <rect x="996" y="74" width="140" height="70" rx="16" fill="#18314b" stroke="#55d6be"/>
+      <text x="1066" y="105" fill="#8fe5d3" font-size="13" text-anchor="middle">04</text>
+      <text x="1066" y="128" fill="#f1f6ff" font-size="18" font-weight="650" text-anchor="middle">IMPLEMENT</text>
+    </g>
+
+    <path d="M648 109 H668 M808 109 H828 M968 109 H988" stroke="#72a7ff" stroke-width="3" stroke-linecap="round"/>
+    <path d="M1066 152 C1066 238 876 247 742 210" fill="none" stroke="#55d6be" stroke-width="3" stroke-linecap="round" stroke-dasharray="7 8"/>
+    <path d="M746 204 L730 208 L742 221" fill="none" stroke="#55d6be" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="648" y="184" width="188" height="48" rx="24" fill="#10283d" stroke="#55d6be" stroke-opacity="0.75"/>
+    <text x="742" y="214" fill="#8fe5d3" font-size="17" font-weight="650" text-anchor="middle">RESUME NEXT SESSION</text>
+  </g>
+</svg>

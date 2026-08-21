@@ -23,6 +23,15 @@ const DEFAULT_SPECS_DIR = '.dsh/specs'
 const SPEC_NAME = /^\d{3}-[a-z0-9]+(?:-[a-z0-9]+)*$/u
 const GOAL_PREFIX = '[SpecFlow:'
 const PACKAGE_ROOT = fileURLToPath(new URL('../', import.meta.url))
+const SPEC_FLOW_HELP = [
+  'SpecFlow turns an idea into durable, reviewable workspace artifacts.',
+  '1. /constitution <project principles> (optional, once per project)',
+  '2. /specify <feature idea>',
+  '3. /plan-spec <NNN-slug>',
+  '4. /tasks <NNN-slug>',
+  '5. /implement <NNN-slug>',
+  'Use /specflow <NNN-slug> at any time to read progress and the next task.',
+].join('\n')
 
 /** Deployment configuration for artifact location and prompt context. */
 export interface Config {
@@ -186,6 +195,20 @@ function renderContext(goal: GoalView, status: SpecStatus | undefined, specsDir:
   ].join('\n')
 }
 
+function renderCommandStatus(status: SpecStatus): string {
+  const next = status.nextTask === null
+    ? status.total === 0
+      ? 'Next: create checkbox tasks with /tasks before implementation.'
+      : 'Next: run the final acceptance audit before completing the goal.'
+    : `Next task: ${status.nextTask}`
+  return [
+    `SpecFlow ${status.spec}: ${status.completed}/${status.total} complete; ${status.pending} pending.`,
+    `Tasks: ${status.tasksPath}`,
+    next,
+    `Continue: /implement ${status.spec}`,
+  ].join('\n')
+}
+
 /** Register SpecFlow skills, commands, status tool, goal bridge, and runtime context. */
 export function apply(ctx: Context, config: Config = {}): void {
   const resolved = resolveConfig(config)
@@ -193,7 +216,25 @@ export function apply(ctx: Context, config: Config = {}): void {
 
   for (const skill of SKILLS) ctx.skills.register(skillRegistration(skill, resolved.specsDir))
 
+  ctx.commands.register({
+    name: 'specflow',
+    description: 'Show the SpecFlow workflow or read one specification\'s progress',
+    input: { hint: '[NNN-slug]' },
+    handler: async (invocation) => {
+      invocation.signal.throwIfAborted()
+      const requested = invocation.rawInput.trim()
+      const spec = requested.length === 0
+        ? specFromGoal(ctx.goals.get(invocation.agent))
+        : requested
+      if (spec === undefined) return { kind: 'success', text: SPEC_FLOW_HELP }
+      const status = await readStatus(ctx, invocation.agent, spec, resolved, invocation.signal)
+      observedStatus.set(invocation.agent, status)
+      return { kind: 'success', text: renderCommandStatus(status) }
+    },
+  })
+
   for (const command of [
+    { name: 'constitution', skill: 'constitution', description: 'Establish durable project engineering principles', hint: '<principles>' },
     { name: 'specify', skill: 'specify', description: 'Create a testable specification from an idea', hint: '<idea>' },
     { name: 'plan-spec', skill: 'plan-spec', description: 'Plan an existing specification', hint: '<NNN-slug>' },
     { name: 'tasks', skill: 'tasks', description: 'Create implementation tasks for a planned specification', hint: '<NNN-slug>' },

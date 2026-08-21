@@ -96,14 +96,83 @@ describe('plugin composition', () => {
 
     expect(skills.map(skill => skill.name)).toEqual(['constitution', 'specify', 'plan-spec', 'tasks', 'implement'])
     expect(skills.every(skill => !skill.content.includes('{{specsDir}}'))).toBe(true)
-    expect(commands.map(command => command.name)).toEqual(['specify', 'plan-spec', 'tasks', 'implement'])
+    expect(commands.map(command => command.name)).toEqual([
+      'specflow',
+      'constitution',
+      'specify',
+      'plan-spec',
+      'tasks',
+      'implement',
+    ])
     expect(tools.map(tool => tool['name'])).toEqual(['specflow_status'])
     expect(contexts.map(context => context.name)).toEqual(['specflow:active-spec'])
     expect(contexts[0]?.text({})).toBe('')
 
+    const specflow = commands.find(command => command.name === 'specflow')
+    const overview = await specflow?.handler({
+      commandId: 'command-0',
+      agent,
+      rawInput: '',
+      signal: new AbortController().signal,
+    } as never)
+    expect(overview).toMatchObject({ kind: 'success' })
+    expect(overview).toHaveProperty('text', expect.stringContaining('/specify <feature idea>'))
+
+    const requestedStatus = await specflow?.handler({
+      commandId: 'command-1',
+      agent,
+      rawInput: ' 001-resume-cli ',
+      signal: new AbortController().signal,
+    } as never)
+    expect(requestedStatus).toEqual({
+      kind: 'success',
+      text: [
+        'SpecFlow 001-resume-cli: 1/2 complete; 1 pending.',
+        'Tasks: .dsh/specs/001-resume-cli/tasks.md',
+        'Next task: T002 behavior',
+        'Continue: /implement 001-resume-cli',
+      ].join('\n'),
+    })
+
+    fs.readText.mockResolvedValueOnce('')
+    const emptyStatus = await specflow?.handler({
+      commandId: 'command-2',
+      agent,
+      rawInput: '001-empty-spec',
+      signal: new AbortController().signal,
+    } as never)
+    expect(emptyStatus).toHaveProperty(
+      'text',
+      expect.stringContaining('Next: create checkbox tasks with /tasks before implementation.'),
+    )
+
+    fs.readText.mockResolvedValueOnce('- [x] T001 verified\n')
+    const completeStatus = await specflow?.handler({
+      commandId: 'command-3',
+      agent,
+      rawInput: '001-complete-spec',
+      signal: new AbortController().signal,
+    } as never)
+    expect(completeStatus).toHaveProperty(
+      'text',
+      expect.stringContaining('Next: run the final acceptance audit before completing the goal.'),
+    )
+
+    const constitution = commands.find(command => command.name === 'constitution')
+    expect(constitution?.handler({
+      commandId: 'command-4',
+      agent,
+      rawInput: ' keep changes reviewable ',
+      signal: new AbortController().signal,
+    } as never)).toEqual({ kind: 'success', text: 'queued /constitution' })
+    expect(followup.mock.calls[0]?.[0]).toMatchObject({
+      content: [{ type: 'text', text: '/constitution keep changes reviewable' }],
+    })
+    followup.mockClear()
+
     const specify = commands.find(command => command.name === 'specify')
     expect(specify?.handler({
-      commandId: 'command-0',
+      commandId: 'command-5',
       agent,
       rawInput: ' add resume support ',
       signal: new AbortController().signal,
@@ -136,7 +205,7 @@ describe('plugin composition', () => {
     const implement = commands.find(command => command.name === 'implement')
     expect(implement).toBeDefined()
     const result = await implement?.handler({
-      commandId: 'command-1',
+      commandId: 'command-6',
       agent,
       rawInput: ' 001-resume-cli ',
       signal: new AbortController().signal,
@@ -152,13 +221,24 @@ describe('plugin composition', () => {
       source: { kind: 'user' },
     })
 
+    const inferredStatus = await specflow?.handler({
+      commandId: 'command-7',
+      agent,
+      rawInput: '',
+      signal: new AbortController().signal,
+    } as never)
+    expect(inferredStatus).toHaveProperty(
+      'text',
+      expect.stringContaining('SpecFlow 001-resume-cli: 1/2 complete; 1 pending.'),
+    )
+
     const rendered = contexts[0]?.text({ scope: agent })
     expect(rendered).toContain('Active SpecFlow specification: 001-resume-cli')
     expect(rendered).toContain('1/2 tasks complete; 1 pending. Next task: T002 behavior')
 
     goal = { ...goal as GoalView, revision: 2, activation: 'disarmed' }
     await implement?.handler({
-      commandId: 'command-2',
+      commandId: 'command-8',
       agent,
       rawInput: '001-resume-cli',
       signal: new AbortController().signal,
