@@ -7,7 +7,7 @@
 
 面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的规格驱动开发套件，直接使用 DSH 原生的 skill、command、goal、tool 和 runtime context。
 
-可安装的 v0.1.2 面向 DSH 0.1.0-rc.6。本项目当前通过 GitHub Release 分发预构建包，尚未发布 npm 包。
+v0.1.3 已针对 DSH 0.1.0-rc.8 与 0.1.1-rc.1 验证，同时保留兼容 rc.6 的 peer 范围。项目继续通过 GitHub Release 分发预构建包，npm 发布已经准备完成但尚未上线。
 
 [English](./README.md)
 
@@ -39,18 +39,24 @@ MVP 包含以下能力。
 
 规格目录是持久状态的唯一事实源。插件不另外维护隐藏的任务数据库，也不为保存任务状态增加必需的自定义会话事件。
 
+## 权限与数据
+
+- SpecFlow 通过 DSH filesystem service 读取 `tasks.md`。各技能可能要求 Agent 经由当前 profile 的正常工具与审批策略，在 `.dsh/memory/` 和 `.dsh/specs/` 下创建或更新文件。
+- 开启 `autoInjectContext` 后，当前 goal 与最近一次读取的任务计数会进入模型可见的 runtime context。
+- 插件不发起网络请求，不读取凭据，不发送遥测，也不注册自定义持久会话事件。
+
 ## 安装
 
-当前代码面向 DSH `0.1.0-rc.6` 插件 API，要求 Node.js `^22.19 || >=24`。
+当前代码支持 DSH `>=0.1.0-rc.6 <0.2.0` 插件 API，要求 Node.js `^22.19 || >=24`。
 
 ```sh
-dsh plugin --profile web add https://github.com/lonelymoon87/dsh-specflow/releases/download/v0.1.2/dsh-specflow-0.1.2.tgz
+dsh plugin --profile web add https://github.com/lonelymoon87/dsh-specflow/releases/download/v0.1.3/dsh-specflow-0.1.3.tgz
 ```
 
 Release tarball 已预构建，不需要构建权限。也可以固定版本从源码安装。
 
 ```sh
-dsh plugin --profile web add github:lonelymoon87/dsh-specflow#v0.1.2
+dsh plugin --profile web add github:lonelymoon87/dsh-specflow#v0.1.3
 ```
 
 源码安装会运行本包的 `prepare` 构建。pnpm 10 及以上版本默认拒绝执行，第一次安装失败时请按 DSH 输出的提示，将准确的包键加入 profile 的构建白名单，然后重新执行同一条命令。需要装进一次性 Agent profile 时，把命令中的 `web` 换成 `headless`。
@@ -85,9 +91,9 @@ dsh plugin --profile web remove dsh-specflow
 
 ## 发布验证
 
-- v0.1.2 tarball 已从 HTTPS Release URL 直接安装进全新 DSH profile；
+- v0.1.3 tarball 已从 HTTPS Release URL 直接安装进全新的 DSH 0.1.0-rc.8 与 0.1.1-rc.1 profile；
 - pack 产物与固定版本 GitHub 源码安装均通过 `dsh --dump-config` 检查；
-- CI 覆盖 Node 22.19 与 Node 24，定时任务会用 `@deepseek-ai/dsh@latest` 重跑真实安装；
+- CI 覆盖 Node 22.19 与 Node 24，兼容矩阵会分别使用 DSH 0.1.0-rc.8、npm `latest` 与 `next` 标签重跑真实安装；
 - bug 与兼容性问题统一进入 [GitHub Issues](https://github.com/lonelymoon87/dsh-specflow/issues)。
 
 ## 许可证

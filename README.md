@@ -7,7 +7,7 @@
 
 Specification-driven development for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness), built from native skills, commands, goals, tools, and runtime context.
 
-The installable v0.1.2 release targets DSH 0.1.0-rc.6. This project currently distributes prebuilt packages through GitHub Releases and is not published on npm.
+The v0.1.3 release is tested with DSH 0.1.0-rc.8 and 0.1.1-rc.1 while retaining the rc.6-compatible peer range. Prebuilt packages are distributed through GitHub Releases; npm publication is prepared but not yet live.
 
 [简体中文](./README.zh-CN.md)
 
@@ -39,18 +39,24 @@ The MVP provides:
 
 The spec directory is the durable source of truth. SpecFlow does not add a required custom session event or maintain a second hidden task database.
 
+## Permissions and data
+
+- SpecFlow reads `tasks.md` through the mounted DSH filesystem service. Its skills may ask the agent to create or update files under `.dsh/memory/` and `.dsh/specs/` through the profile's normal tool and approval policy.
+- When `autoInjectContext` is enabled, the active goal and the most recently observed task counts become model-visible runtime context.
+- The plugin does not make network requests, resolve credentials, transmit telemetry, or register a custom durable session event.
+
 ## Install
 
-The package currently targets the DSH `0.1.0-rc.6` plugin APIs and Node.js `^22.19 || >=24`.
+The package supports the DSH `>=0.1.0-rc.6 <0.2.0` plugin APIs and Node.js `^22.19 || >=24`.
 
 ```sh
-dsh plugin --profile web add https://github.com/lonelymoon87/dsh-specflow/releases/download/v0.1.2/dsh-specflow-0.1.2.tgz
+dsh plugin --profile web add https://github.com/lonelymoon87/dsh-specflow/releases/download/v0.1.3/dsh-specflow-0.1.3.tgz
 ```
 
 The release tarball is prebuilt and needs no build allowance. A pinned source install is also supported:
 
 ```sh
-dsh plugin --profile web add github:lonelymoon87/dsh-specflow#v0.1.2
+dsh plugin --profile web add github:lonelymoon87/dsh-specflow#v0.1.3
 ```
 
 The source install runs this package's `prepare` build. pnpm 10 and later reject it until the profile allowlists the exact package key printed by the failed command; apply that instruction and rerun the same `dsh plugin add` command. Replace `web` with `headless` to install into the one-shot agent profile.
@@ -95,9 +101,9 @@ The bundle inserts the plugin with defaults. A profile may configure the plugin 
 
 ## Release evidence
 
-- The v0.1.2 tarball installs directly from its HTTPS release URL into a clean DSH profile.
+- The v0.1.3 tarball installs directly from its HTTPS release URL into clean DSH 0.1.0-rc.8 and 0.1.1-rc.1 profiles.
 - The packed bundle and pinned GitHub source install both appear in `dsh --dump-config`.
-- CI covers Node 22.19 and Node 24; a scheduled workflow repeats the real install against `@deepseek-ai/dsh@latest`.
+- CI covers Node 22.19 and Node 24; a compatibility matrix repeats the real install against DSH 0.1.0-rc.8 plus the `latest` and `next` npm tags.
 - Bugs and compatibility reports are tracked in [GitHub Issues](https://github.com/lonelymoon87/dsh-specflow/issues).
 
 ## License
