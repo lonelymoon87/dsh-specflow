@@ -1,0 +1,30 @@
+name: Product request
+description: Propose a SpecFlow workflow or artifact improvement.
+title: "[Request] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Describe what becomes difficult or unreliable in a real specification workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: current-workaround
+    attributes:
+      label: Current workaround
+      description: Explain how you handle the problem today, if applicable.
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired observable outcome
+      description: State what a user should be able to see or do. An implementation proposal is optional.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Example or evidence
+      description: Provide a redacted artifact excerpt, command sequence, or link that demonstrates the need.
